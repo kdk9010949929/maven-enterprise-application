@@ -1,0 +1,68 @@
+pipeline {
+    agent any
+    tools {
+  maven 'maven_3.8.4'
+}
+
+    stages {
+        //Get the code from Github
+        stage('Checkout Code') {
+            steps {
+            git credentialsId: 'bd85bfcf-5a77-4ea7-a7ae-ad38fed4d2e7', url: 'https://github.com/kdk9010949929/maven-web-application.git'
+            }
+        }
+        //Do the build
+       stage('Build') {
+            steps {
+            sh"mvn clean package"
+            }
+        }
+        //Execute Sonarqube Report
+       stage('Execute Sonarqube reort') {
+            steps {
+            sh"mvn clean sonar:sonar"
+            }
+        }
+        //Upload Artifacts Into Nexus Repo
+  /*       stage('Upload Artifacts Into Nexus Repo') {
+            steps {
+            sh"mvn clean deploy"
+            }
+        }
+        //Deploy app inti Tomcat
+        stage('Deploy App Into Tomcat') {
+            steps {
+                sshagent(['1dd17c7f-c3a3-4f3c-a2dd-424061abedb6']) {
+            sh "scp -o StrictHostKeyChecking=no target/maven-web-application.war ec2-user@35.154.27.168:/opt/apache-tomcat-9.0.56/webapps/"
+}
+            }
+        }
+    
+    }//stage closing
+    
+    //Sending emal notification
+    post {
+  always {
+    emailext body: '''Build over
+
+Thanks & Regards
+Dinesh Kumar
+9010949929''', subject: 'Build over', to: 'dineshkumar.kencha@gmail.com'
+  }
+  success {
+emailext body: '''Build success
+
+Thanks & Regards
+Dinesh Kumar
+9010949929''', subject: 'Build success', to: 'dineshkumar.kencha@gmail.com'
+  }
+  failure {
+emailext body: '''Build failure
+
+Thanks & Regards
+Dinesh Kumar
+9010949929''', subject: 'Build failure', to: 'dineshkumar.kencha@gmail.com'
+      }
+      */
+}
+}//pipeline closing
